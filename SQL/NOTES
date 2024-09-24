@@ -66,3 +66,244 @@ WHERE title LIKE 'Mission Impossible _'
 WHERE name LIKE '_her%'
 WHERE first_name ILIKE 'J%'
 -- case insensitive
+
+-----------------------
+
+FUNCTIONS (SELECT / HAVING clause)
+AVG() - average value of floating, can be used with ROUND(AVG(t),2)
+COUNT() - number of values, COUNT(*)
+MAX() - max value
+MIN() - min value 
+SUM() - sum of values 
+
+
+
+GROUP BY
+
+SELECT category_col, AVG(data_col)
+FROM table
+WHERE category_col != 'A'
+GROUP BY category_col
+
+SELECT company,division, SUM(sales)
+FROM finance_table
+WHERE division IN ('marketing','transport')
+GROUP BY company, division
+
+-- avarage replacement cost per MPAA rating
+
+SELECT rating, AVG(replacement_cost)
+FROM film 
+GROUP BY rating
+
+DATE() 
+-- make date from created date
+
+
+
+HAVING 
+-- filter along with a group by, can work on fucntion
+
+SELECT customer_id, SUM(amount) FROM payment
+GROUP BY customer_id
+HAVING SUM(amount) > 100
+
+SELECT store_id, COUNT(customer_id) FROM customer 
+GROUP BY store_id 
+HAVING COUNT(customer_id) > 300
+
+
+
+AS 
+SELECT SUM(column) AS new_name
+FROM table 
+
+
+
+INNER JOIN 
+-- multiple tables together
+
+SELECT * FROM TableA 
+INNER JOIN TableB
+ON TableA.col_match = TableB.col_match
+
+SELECT * FROM Registrations 
+INNER JOIN Logins 
+ON Registrations.name = Logins.name 
+
+
+
+OUTER JOIN 
+-- values only present in one of othe tables being joined
+
+FULL OUTER JOIN 
+
+SELECT * FROM TableA 
+FULL OUTER JOIN TableB
+ON TableA.col_match = TableB.col_match
+
+-- for same valeus it will be null 
+SELECT * FROM Registrations FULL OUTER JOIN Logins 
+ON Registrations.name = Logins.name 
+WHERE Registrations.reg_id IS null OR 
+Logins.log_id IS null
+
+
+
+LEFT OUTER JOIN 
+-- results only in the left table, no match in right, then null
+
+SELECT * FROM TableA
+LEFT OUTER JOIN TableB 
+ON TableA.col_match = TableB.col_match
+
+-- if unique only for Tab A
+
+SELECT * FROM TableA
+LEFT OUTER JOIN TableB 
+ON TableA.col_match = TableB.col_match
+WHERE TableB.id IS null
+
+
+
+RIGHT OUTER JOIN 
+-- essentially the same as left join, eexcept the tablers are swtiched, you can switch table order instead 
+
+SELECT * FROM TableA 
+RIGHT OUTER JOIN TableB
+ON TableA.col_match = TableB.col_match
+
+
+
+UNION 
+-- combine results of two or more SELECT 
+
+SELECT column FROM table1 
+UNION 
+SELECT column FROM table2 
+
+
+
+TIMESTAMPS
+TIME-DATE-TIMESTAMP-TIMESTAMPTZ
+
+SHOW ALL 
+SHOW TIMEZONE 
+
+SELECT NOW()
+-- timestamptz
+SELECT TIMEOFDAY()
+-- same as string 
+SELECT CURRENT_TIME 
+SELECT CURRENT_DATE 
+
+
+
+EXTRACT()
+-- obtian sub-component
+
+EXTRACT(YEAR FROM date_col)
+-- MONTH QUARTER  dow - day of the week 0-6
+
+AGE()
+-- caluclates and return current age 
+
+AGE(date_col)
+
+TO_CHAR()
+-- convert data types to text
+
+TO_CHAR(date_col,'mm-dd-yyyy')
+-- types can be checked
+
+
+
+math
+
+SELECT LOWER(LEFT first_name,1) || LOWER(last_name) || 'gmail.com'
+AS custom_email
+FROM customer 
+
+
+
+-- better tham average
+SELECT student,grade 
+FROM test_scores
+WHERE grade > (SELECT AVG(grade))
+FROM test_scores
+
+
+
+-- subqueries 
+SELECT column_name
+FROM table_name
+WHERE EXISTS
+(SELECT column_name FROM 
+table_name WHERE condition)
+
+
+
+CREATE TABLE table_name (
+    column_name TYPE column_constraint
+    column_name TYPE column_constraint
+    table_constraint table_constraint )
+INHERITS existing_table_name
+
+CREATE TABLE players(
+    player_id SERIAL PRIMARY KEY
+    age SMALLINT NOT NULL
+)
+
+CREATE TABLE account(
+    user_id SERIAL PRIMARY KEY, 
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(50) NOT NULL,
+    email VARCHAR(250) UNIQUE NOT NULL,
+    created_on TIMESTAMP notNOT NULL,
+)
+
+
+
+INSERT INTO account(username,password,email,create_on)
+VALIES 
+('jOSE','PASSWORD'.'jose@mail.com',CURRENT_TIMESTAMP)
+
+UPDATE account 
+SET last_login = create_on
+
+UPDATE tableA 
+SET orginal_col = TableB.new_col 
+FROM tableB 
+WHERE tableA.id = TableB.id
+
+DELETE FROM table 
+WHERE row_id = 1 
+
+ALTER TABLE table_name 
+ADD COLUMN new_col TYPE 
+
+
+
+ALTER TABLE table_name 
+DROP COLUMN col_name CASCADE 
+
+
+
+CASE 
+    WHEN condition1 THEN result1 
+    WHEN condition2 THEN result2 
+    ELSE some_other_result
+END 
+
+SELECT a, 
+CASE WHEN a = 1  THEN `one`
+WHEN a = 2 THEN 'two'
+ELSE 'other' AS label 
+END 
+FROM test
+
+
+ADD SQL COURSE 
+ADD AND UPDATE CV
+ADD IMG PHOTO OF CV WEBSITE
+ADD DESCRIPTION WEBSITE FOR WEB
